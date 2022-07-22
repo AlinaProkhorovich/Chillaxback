@@ -1,7 +1,7 @@
 from rest_framework import serializers
-# from .models import User
 from django.contrib.auth import authenticate, models
 from django.contrib.auth.models import User
+from core.models import Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,7 +41,7 @@ class RegistrationSerializer(UserSerializer):
 
     def create(self, validated_data):
         validated_data.pop("password_submit")
-        return User.objects.create_user(**validated_data)
+        return Profile.objects.create_user(**validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
