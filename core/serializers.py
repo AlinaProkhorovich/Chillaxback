@@ -7,7 +7,7 @@ from core.models import Profile, Comment
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['username', 'email',]
+        fields = ['email',]
 
 class RegistrationSerializer(UserSerializer):
     password = serializers.CharField(

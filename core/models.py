@@ -11,21 +11,19 @@ from django.db import models
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, username, email, password=None):
-        if username is None:
-            raise TypeError('Users must have a username.')
+    def create_user(self, email, password=None):
         if email is None:
             raise TypeError('Users must have an email address.')
-        user = self.model(username=username, email=self.normalize_email(email))
+        user = self.model(email=self.normalize_email(email))
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, email, password):
         if password is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -34,14 +32,16 @@ class UserManager(BaseUserManager):
 
 
 class Profile(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    # username = models.CharField(db_index=True, max_length=255, unique=True) #delete
     email = models.EmailField(db_index=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
     objects = UserManager()
 
     def __str__(self):
@@ -52,10 +52,10 @@ class Profile(AbstractBaseUser, PermissionsMixin):
         return self._generate_jwt_token()
 
     def get_full_name(self):
-        return self.username
+        return self.email
 
     def get_short_name(self):
-        return self.username
+        return self.email
 
     def _generate_jwt_token(self):
         dt = datetime.now() + timedelta(days=1)
