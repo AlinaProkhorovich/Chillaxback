@@ -6,8 +6,8 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, permissions
 
 # from django.contrib.auth.models import User
-from core.models import Profile
-from core.serializers import RegistrationSerializer, LoginSerializer, UserSerializer
+from core.models import Profile, Comment
+from core.serializers import RegistrationSerializer, LoginSerializer, UserSerializer, CommentSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -67,3 +67,10 @@ class RegistrationAPIView(APIView):
         serializer.save()
         return Response({'token': serializer.data.get('token', None),},status=status.HTTP_201_CREATED,)
 
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.AllowAny]
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['speciality']

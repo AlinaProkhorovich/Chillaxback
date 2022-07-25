@@ -1,20 +1,13 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate, models
-from django.contrib.auth.models import User
-from core.models import Profile
+
+from core.models import Profile, Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.User
-        fields = [
-            "id",
-            "email",
-            "username",
-            "is_active",
-            "is_superuser",
-        ]
-
+        model = Profile
+        fields = ['username', 'email',]
 
 class RegistrationSerializer(UserSerializer):
     password = serializers.CharField(
@@ -81,3 +74,9 @@ class LoginSerializer(serializers.Serializer):
             'username': user.username,
             'token': user.token
         }
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'

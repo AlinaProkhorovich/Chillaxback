@@ -1,8 +1,4 @@
-
 from event.models import Events
-
-
-
 import jwt
 
 from datetime import datetime, timedelta
@@ -42,6 +38,7 @@ class Profile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -69,6 +66,7 @@ class Profile(AbstractBaseUser, PermissionsMixin):
         }, settings.SECRET_KEY, algorithm='HS256')
 
         return token.decode('utf-8')
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Events, on_delete=models.CASCADE)
